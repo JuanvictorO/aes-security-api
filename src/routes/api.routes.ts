@@ -1,10 +1,11 @@
 import { Router } from 'express';
+import { CreateDataController } from '../modules/data/useCases/createDataUseCase/createDataController';
 
 export const apiRouter = Router();
 
-apiRouter.post('/', (req, res) => {
-    res.send(req.body);
-});
+const createDataController = new CreateDataController();
+
+apiRouter.post('/', createDataController.handle);
 
 apiRouter.get('/', (req, res) => {
     res.send({

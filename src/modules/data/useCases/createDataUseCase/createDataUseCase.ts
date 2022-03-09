@@ -3,25 +3,39 @@ import { IntegerData } from "../../entities/IntegerData";
 import { StringData } from "../../entities/StringData";
 
 export class CreateDataUseCase {
-  dataType: string = "integer";
-  data: number | string | Date;
-  constructor( dataType: string, data: number | string | Date ) {
-    this.dataType = dataType;
+  data: Array<Array<number | string | Date>>;
+  constructor( data: Array<Array<number | string | Date>> ) {
     this.data = data;
   }
 
   async execute(): Promise<void> {
-    let intObj;
-    if ( this.dataType === "integer" ) {
-      this.data = this.data as number;
-      intObj = new IntegerData( this.data );
-    }else if ( this.dataType === "string" ) {
-      this.data = this.data as string;
-      intObj = new StringData( this.data );
-    }else{
-      this.data = this.data as Date;
-      intObj = new DateData( this.data );
+    let arrReturn = [];
+
+    for ( const arrType of this.data ) {
+      let chave:any = arrType[0];
+      let value = arrType[1];
+
+      switch ( typeof value ) {
+        case "number":
+          value = value as number;
+          const intObj = new IntegerData( value );
+          const intCrypt = intObj.crypt();
+          arrReturn[ chave ] = intCrypt;
+          break;
+        case "string":
+          value = value as string;
+          const strObj = new StringData( value );
+          const strCrypt = strObj.crypt();
+          arrReturn[ chave ] =  strCrypt;
+          break;
+        // case "Date":
+        //   value = value as Date;
+        //   const dateObj = new DateData( value );
+
+        //   break;
+        default:
+          break;
+      }
     }
-    console.log( intObj.crypt() );
   }
 }

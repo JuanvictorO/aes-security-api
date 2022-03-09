@@ -3,16 +3,17 @@ import { CreateDataUseCase } from './createDataUseCase';
 
 export class CreateDataController {
   async handle( req: Request, res: Response) {
-    const { dataString, dataDate, dataInt } = req.body;
+    try{
+      const data: Array<Array<number | string | Date>> = Object.entries(req.body);
 
-    const createDataUseCase = new CreateDataUseCase( "integer", dataInt );
-    const createDataUseCase2 = new CreateDataUseCase( "string", dataString );
-    const createDataUseCase3 = new CreateDataUseCase( "date", dataDate );
+      const createDataUseCase = new CreateDataUseCase( data );
+      createDataUseCase.execute();
+      res.status(200).send( JSON.stringify( createDataUseCase.data ) );
+    }catch(err){
+      res.status(400).json({
+        message: err.message || 'Unexpected error.'
+      });
+    }
 
-    await createDataUseCase.execute();
-    await createDataUseCase2.execute();
-    await createDataUseCase3.execute();
-
-    return res.status(200).send();
   }
 }

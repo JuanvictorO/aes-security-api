@@ -7,8 +7,10 @@ export class CreateDataController {
       const data: Array<Array<number | string | Date>> = Object.entries(req.body);
 
       const createDataUseCase = new CreateDataUseCase( data );
-      createDataUseCase.execute();
-      res.status(200).send( JSON.stringify( createDataUseCase.data ) );
+      const ret = await createDataUseCase.execute();
+
+      res.status(201)
+        .json( ret );
     }catch(err){
       res.status(400).json({
         message: err.message || 'Unexpected error.'

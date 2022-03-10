@@ -1,3 +1,4 @@
+import { verificaData } from "../../../../shared/utils/verificaData";
 import { DateData } from "../../entities/DateData";
 import { IntegerData } from "../../entities/IntegerData";
 import { StringData } from "../../entities/StringData";
@@ -8,14 +9,22 @@ export class CreateDataUseCase {
     this.data = data;
   }
 
-  async execute(): Promise<void> {
+  async execute(): Promise<any[]> {
     let arrReturn = [];
 
     for ( const arrType of this.data ) {
-      let chave:any = arrType[0];
-      let value = arrType[1];
 
-      switch ( typeof value ) {
+      let value = arrType[1];
+      let type;
+
+      if( typeof value === "string" ) {
+        type = verificaData( value ) ? "date" : "string";
+      }else{
+        type = "integer";
+      }
+
+      let chave:any = arrType[0];
+      switch ( type ) {
         case "number":
           value = value as number;
           const intObj = new IntegerData( value );
@@ -28,14 +37,16 @@ export class CreateDataUseCase {
           const strCrypt = strObj.crypt();
           arrReturn[ chave ] =  strCrypt;
           break;
-        // case "Date":
-        //   value = value as Date;
-        //   const dateObj = new DateData( value );
-
-        //   break;
+        case "date":
+          value = value as Date;
+          const dateObj = new DateData( value );
+          const dateCrypt = dateObj.crypt();
+          arrReturn[ chave ] = dateCrypt;
+          break;
         default:
           break;
       }
     }
+    return arrReturn;
   }
 }

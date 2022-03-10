@@ -1,5 +1,5 @@
 export interface IData{
   value: number | string | Date;
-  crypt(): number | string;
+  crypt(): number | string | Date;
   decrypt(): any;
 }

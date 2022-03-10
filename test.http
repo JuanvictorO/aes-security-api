@@ -3,5 +3,6 @@ POST http://localhost:3000/api
 content-type: application/json
 
 {
-  "name": "test"
+  "name": "test",
+  "dateOfBirth": "2001-02-01"
 }

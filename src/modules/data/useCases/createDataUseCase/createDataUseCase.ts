@@ -20,7 +20,7 @@ export class CreateDataUseCase {
       if( typeof value === "string" ) {
         type = verificaData( value ) ? "date" : "string";
       }else{
-        type = "integer";
+        type = "number";
       }
 
       let chave:any = arrType[0];

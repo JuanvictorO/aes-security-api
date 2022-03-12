@@ -8,7 +8,7 @@ export class CreateDataController {
 
       const createDataUseCase = new CreateDataUseCase( data );
       const ret = await createDataUseCase.execute();
-
+      console.log(ret);
       res.status(201)
         .json( ret );
     }catch(err){

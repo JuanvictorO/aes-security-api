@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CreateDataController } from '../modules/data/useCases/createDataUseCase/createDataController';
+import { CreateDataController } from '../modules/data/controllers/createDataController';
 
 export const apiRouter = Router();
 

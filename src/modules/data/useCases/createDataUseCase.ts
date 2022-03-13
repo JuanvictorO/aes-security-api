@@ -10,7 +10,7 @@ export class CreateDataUseCase {
   }
 
   async execute(): Promise<any[]> {
-    let arrReturn = [];
+    let arrReturn = Array<any>();
 
     let type;
 
@@ -25,7 +25,7 @@ export class CreateDataUseCase {
       let chave: any = arrType[0];
 
       // Retorna o objeto criptografado
-      arrReturn[chave] = this.encryptData(type, value);
+      arrReturn.push([ chave, this.encryptData(type, value) ]);
     }
 
     return arrReturn;

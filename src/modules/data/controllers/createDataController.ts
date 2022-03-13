@@ -8,7 +8,6 @@ export class CreateDataController {
 
     const createDataUseCase = new CreateDataUseCase(data);
     const encryptData = await createDataUseCase.execute();
-
-    res.status(201).json(instanceToInstance(encryptData));
+    res.status(201).json(encryptData);
   }
 }

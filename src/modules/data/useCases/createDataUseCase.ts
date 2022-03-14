@@ -22,10 +22,12 @@ export class CreateDataUseCase {
       const type = this.getType(value);
 
       // Pega a chave do array
-      let chave: any = arrType[0];
+      const chaveKey: any = arrType[0];
 
       // Retorna o objeto criptografado
-      arrReturn.push([ chave, this.encryptData(type, value) ]);
+      arrReturn.push(  {
+        [chaveKey]: this.encryptData(type, value)
+      });
     }
 
     return arrReturn;

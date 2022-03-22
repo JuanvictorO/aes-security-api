@@ -5,14 +5,14 @@ import { StringData } from '../entities/StringData';
 
 export class CreateDataUseCase {
   data: Array<Array<number | string | Date>>;
-  constructor(data: Array<Array<number | string | Date>>) {
+  seed: string;
+  constructor(data: Array<Array<number | string | Date>>, seed: string) {
     this.data = data;
+    this.seed = seed;
   }
 
   async execute(): Promise<any[]> {
     let arrReturn = Array<any>();
-
-    let type;
 
     for (const arrType of this.data) {
       // Pega o valor do array
@@ -26,10 +26,9 @@ export class CreateDataUseCase {
 
       // Retorna o objeto criptografado
       arrReturn.push(  {
-        [chaveKey]: this.encryptData(type, value)
+        [chaveKey]: await this.encryptData(type, value, chaveKey)
       });
     }
-
     return arrReturn;
   }
 
@@ -47,29 +46,30 @@ export class CreateDataUseCase {
     }
   }
 
-  encryptData(type: string, value: any): any {
+  async encryptData(type: string, value: any, chaveKey:string): Promise<any> {
     switch (type) {
       case 'string':
         value = value as string;
-        const strObj = new StringData(value);
-        const strCrypt = strObj.crypt();
+        const strObj = new StringData(value, "2cbacfc285bc26b617b2533ef91d7846b424f0a3719c31de68fd87e109cfa9f0");
+        const strCrypt = await strObj.crypt();
+
         return strCrypt;
 
       case 'integer':
         value = value as number;
-        const intObj = new IntegerData(value);
+        const intObj = new IntegerData(value, "eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170");
         const intCrypt = intObj.crypt();
         return intCrypt;
 
       case 'float':
         value = value as number;
-        const floatObj = new IntegerData(value);
+        const floatObj = new IntegerData(value, chaveKey);
         const floatCrypt = floatObj.crypt();
         return floatCrypt;
 
       case 'date':
         value = value as Date;
-        const dateObj = new DateData(value);
+        const dateObj = new DateData(value, 'eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170');
         const dateCrypt = dateObj.crypt();
         return dateCrypt;
 

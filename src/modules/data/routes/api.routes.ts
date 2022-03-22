@@ -5,7 +5,7 @@ export const apiRouter = Router();
 
 const createDataController = new CreateDataController();
 
-apiRouter.post('/', createDataController.handle);
+apiRouter.post('/:tableName', createDataController.handle);
 
 apiRouter.get('/', (req, res) => {
     res.send({

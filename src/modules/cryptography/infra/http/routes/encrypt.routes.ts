@@ -1,6 +1,8 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
-import { encryptController } from '../controllers/EncryptController';
+import { EncryptController } from '../controllers/EncryptController';
+
+const encryptController = new EncryptController();
 
 const encryptRouter = Router();
 
@@ -11,7 +13,7 @@ encryptRouter.post(
       data: Joi.array().required(),
     },
   }),
-  encryptController.encrypt(),
+  encryptController.encrypt,
 );
 
 encryptRouter.post(
@@ -21,7 +23,7 @@ encryptRouter.post(
       data: Joi.array().required(),
     },
   }),
-  encryptController.decrypt(),
+  encryptController.decrypt,
 );
 
 export { encryptRouter };

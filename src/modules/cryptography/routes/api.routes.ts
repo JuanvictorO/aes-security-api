@@ -1,4 +1,4 @@
-import { ensureAuthenticated } from '../../../shared/middlewares/tokenAuthenticated';
+import { ensureAuthenticated } from '@shared/middlewares/tokenAuthenticated';
 import { Router } from 'express';
 import { EncryptController } from '../infra/http/controllers/EncryptController';
 

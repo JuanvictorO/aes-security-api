@@ -1,1 +1,1 @@
-import "../../modules/cryptography/repositories";
+import '@modules/cryptography/repositories';

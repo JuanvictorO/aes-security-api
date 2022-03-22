@@ -4,11 +4,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --inspect --transpile-only src/shared/server.ts --ignore-watch node_modules ",
+    "dev": "ts-node-dev -r tsconfig-paths/register --inspect --respawn --transpile-only src/shared/server.ts --ignore-watch node_modules --poll --respawn src/shared/infra/http/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli"
   },
   "license": "MIT",
   "dependencies": {
+    "@sentry/node": "^6.19.1",
+    "celebrate": "^15.0.1",
     "class-transformer": "^0.5.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -20,7 +22,8 @@
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.6.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "typeorm-transactional-cls-hooked": "^0.1.21"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -37,6 +40,7 @@
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.14.0",
     "typescript": "^4.5.5"
   }
 }

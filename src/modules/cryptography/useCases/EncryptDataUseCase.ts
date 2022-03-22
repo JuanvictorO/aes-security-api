@@ -1,6 +1,6 @@
-import { AppError } from '../../../shared/errors/AppError';
-import { inject } from 'tsyringe';
-import { verificaData } from '../../../shared/utils/verificaData';
+import { AppError } from '@shared/errors/AppError';
+import { verificaData } from '@shared/utils/verificaData';
+import { inject, injectable } from 'tsyringe';
 import { DateData } from '../entities/DateData';
 import { IntegerData } from '../entities/IntegerData';
 import { StringData } from '../entities/StringData';
@@ -13,6 +13,7 @@ type Request = {
   cliente_id: string;
 };
 
+@injectable()
 export class EncryptDataUseCase {
   constructor(
     @inject('TabelaRepository')
@@ -34,32 +35,30 @@ export class EncryptDataUseCase {
       throw new AppError('Tabela não encontrada');
     }
 
-    if(tabela.campos.length === 0) {
-      throw new AppError('Tabela não possui campos');
-    }
+    // if (tabela.campos.length === 0) {
+    //   throw new AppError('Tabela não possui campos');
+    // }
 
+    // let arrReturn = {};
 
-    let arrReturn = {};
+    // for (let i = 0; i < tabela.campos.length; i++) {
+    //   const campo = tabela.campos[i];
+    // }
 
-    for (let i = 0; i < tabela.campos.length; i++) {
-      const campo = tabela.campos[i];
+    // for (const arrType of data) {
+    //   // Pega o valor do array
+    //   let value = arrType[1];
 
-    }
+    //   // Pega o tipo do valor
+    //   const type = this.getType(value);
 
-    for (const arrType of data) {
-      // Pega o valor do array
-      let value = arrType[1];
+    //   // Pega a chave do array
+    //   const chaveKey: any = arrType[0];
 
-      // Pega o tipo do valor
-      const type = this.getType(value);
-
-      // Pega a chave do array
-      const chaveKey: any = arrType[0];
-
-      // Retorna o objeto criptografado
-      arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
-    }
-    return arrReturn;
+    //   // Retorna o objeto criptografado
+    //   arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
+    // }
+    // return arrReturn;
   }
 
   getType(value: any): string {

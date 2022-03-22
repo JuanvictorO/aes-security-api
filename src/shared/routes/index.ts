@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { dataRouter } from '../../modules/data/routes/index.routes';
+import { dataRouter } from '../../modules/cryptography/routes/index.routes';
 
 const routes = Router();
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CreateDataController } from '../controllers/createDataController';
+import { CreateDataController } from '../infra/http/controllers/createDataController';
 
 export const apiRouter = Router();
 

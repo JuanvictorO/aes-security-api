@@ -4,3 +4,5 @@ const authConfig = {
     expiresIn: '365d',
   },
 };
+
+export { authConfig };

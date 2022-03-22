@@ -1,7 +1,7 @@
-import { generateStringSeed } from '../../../shared/utils/generateStringSeed';
+import { generateStringSeed } from '../../../../../shared/utils/generateStringSeed';
 import { instanceToInstance } from 'class-transformer';
 import { Request, Response } from 'express';
-import { CreateDataUseCase } from '../useCases/createDataUseCase';
+import { CreateDataUseCase } from '../../../useCases/createDataUseCase';
 
 export class CreateDataController {
   async handle(req: Request, res: Response) {

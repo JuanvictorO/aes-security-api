@@ -6,7 +6,7 @@ import { ParsedQs } from 'qs';
 import { generateStringSeed } from '@shared/utils/generateStringSeed';
 import { EncryptDataUseCase } from '@modules/cryptography/useCases/EncryptDataUseCase';
 
-export class encryptController {
+export class EncryptController {
   public async encrypt(req: Request, res: Response): Promise<Response> {
     const data: Array<Array<number | string | Date>> = Object.entries(req.body);
     const cliente_id = req.cliente.id;
@@ -22,12 +22,14 @@ export class encryptController {
   }
 
   public async decrypt(req: Request, res: Response): Promise<Response> {
-    const { ...rest } = req.body;
+    const data: Array<Array<number | string | Date>> = Object.entries(req.body);
+    const cliente_id = req.cliente.id;
+    const { tabela_nome } = req.params;
 
-    //const encryptUseCase = container.resolve(EncryptUseCase);
+    const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 
-    //const dataEncoded = await encryptUseCase.execute({ name, email, phone, identify, password });
+    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id });
 
-    return response.json(instanceToInstance({ ...rest }));
+    return res.status(201).json(dataEncoded);
   }
 }

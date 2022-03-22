@@ -1,14 +1,10 @@
 import { Router } from 'express';
-import { CreateDataController } from '../infra/http/controllers/createDataController';
+import { EncryptController } from '../infra/http/controllers/EncryptController';
 
 export const apiRouter = Router();
 
-const createDataController = new CreateDataController();
+const encryptController = new EncryptController();
 
-apiRouter.post('/:tableName', createDataController.handle);
+apiRouter.post('/encrypt/:tableName', encryptController.encrypt);
 
-apiRouter.get('/', (req, res) => {
-    res.send({
-        message: 'Hello World'
-    });
-});
+apiRouter.post('/decrypt/:tableName', encryptController.decrypt);

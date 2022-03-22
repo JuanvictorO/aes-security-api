@@ -14,12 +14,6 @@ type Request = {
 };
 
 export class EncryptDataUseCase {
-  // data: Array<Array<number | string | Date>>;
-  // seed: string;
-  // constructor(data: Array<Array<number | string | Date>>, seed: string) {
-  //   this.data = data;
-  //   this.seed = seed;
-  // }
   constructor(
     @inject('TabelaRepository')
     private tabelaRepository: TabelaRepositoryInterface,
@@ -51,7 +45,7 @@ export class EncryptDataUseCase {
       const campo = tabela.campos[i];
 
     }
-    
+
     for (const arrType of data) {
       // Pega o valor do array
       let value = arrType[1];

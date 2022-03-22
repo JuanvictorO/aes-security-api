@@ -7,7 +7,7 @@ export class EncryptController {
   public async encrypt(req: Request, res: Response): Promise<Response> {
     const data: Array<Array<number | string | Date>> = Object.entries(req.body);
     const cliente_id = req.cliente.id;
-    const { tabela_nome } = req.params;
+    const tabela_nome = req.params.tableName;
 
     //const stringSeed = generateStringSeed(table_name, Object.keys(req.body), 'SW50ZWdyaXR5RXhhbXBsZQ==');
 

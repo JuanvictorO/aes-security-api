@@ -7,7 +7,7 @@ const encryptController = new EncryptController();
 const encryptRouter = Router();
 
 encryptRouter.post(
-  '/encrypt',
+  '/encrypt/:table',
   celebrate({
     [Segments.BODY]: {
       data: Joi.array().required(),
@@ -17,7 +17,7 @@ encryptRouter.post(
 );
 
 encryptRouter.post(
-  '/decrypt',
+  '/decrypt/:table',
   celebrate({
     [Segments.BODY]: {
       data: Joi.array().required(),

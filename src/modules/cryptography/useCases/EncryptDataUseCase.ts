@@ -35,31 +35,35 @@ export class EncryptDataUseCase {
       throw new AppError('Tabela não encontrada');
     }
 
-    // if (tabela.campos.length === 0) {
-    //   throw new AppError('Tabela não possui campos');
-    // }
+    if (tabela.campos.length === 0) {
+      throw new AppError('Tabela não possui campos');
+    }
 
-    // let arrReturn = {};
+    let arrReturn = {};
 
-    // for (let i = 0; i < tabela.campos.length; i++) {
-    //   const campo = tabela.campos[i];
-    // }
+    for (let i = 0; i < tabela.campos.length; i++) {
+      const campo = tabela.campos[i];
 
-    // for (const arrType of data) {
-    //   // Pega o valor do array
-    //   let value = arrType[1];
+      for (const arrType of data) {
+        // Pega a chave do array
+        const chaveKey: any = arrType[0];
 
-    //   // Pega o tipo do valor
-    //   const type = this.getType(value);
+        if(chaveKey === campo.nome) {
+          // Pega o valor do array
+          const value = arrType[1];
 
-    //   // Pega a chave do array
-    //   const chaveKey: any = arrType[0];
+          const type = this.getType(value);
 
-    //   // Retorna o objeto criptografado
-    //   arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
-    // }
-    // return arrReturn;
+          const chaveKeyCrypt = await this.encryptData(type, value, campo.token);
+
+          arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
+        }
+
+      }
+    }
+    return arrReturn;
   }
+
 
   getType(value: any): string {
     if (typeof value === 'string') {
@@ -79,14 +83,14 @@ export class EncryptDataUseCase {
     switch (type) {
       case 'string':
         value = value as string;
-        const strObj = new StringData(value, '2cbacfc285bc26b617b2533ef91d7846b424f0a3719c31de68fd87e109cfa9f0');
+        const strObj = new StringData(value, chaveKey);
         const strCrypt = await strObj.crypt();
 
         return strCrypt;
 
       case 'integer':
         value = value as number;
-        const intObj = new IntegerData(value, 'eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170');
+        const intObj = new IntegerData(value, chaveKey);
         const intCrypt = intObj.crypt();
         return intCrypt;
 
@@ -98,7 +102,7 @@ export class EncryptDataUseCase {
 
       case 'date':
         value = value as Date;
-        const dateObj = new DateData(value, 'eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170');
+        const dateObj = new DateData(value, chaveKey);
         const dateCrypt = dateObj.crypt();
         return dateCrypt;
 

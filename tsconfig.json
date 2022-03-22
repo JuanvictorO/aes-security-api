@@ -11,6 +11,7 @@
     "useUnknownInCatchVariables": false,
     "allowJs": true,
     "baseUrl": "./src",
+    "moduleResolution": "node",
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

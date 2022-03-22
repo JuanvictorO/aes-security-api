@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../../shared/errors/AppError';
 
 import { container } from 'tsyringe';
-import { ShowClienteUseCase } from '@modules/cryptography/useCases/ShowClienteUseCase';
+import { ShowClienteUseCase } from '../../modules/cryptography/useCases/ShowClienteUseCase';
 
 interface JWTTokenPayload {
   iat: number;

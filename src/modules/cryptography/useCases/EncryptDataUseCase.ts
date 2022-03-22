@@ -39,7 +39,7 @@ export class EncryptDataUseCase {
       throw new AppError('Tabela não possui campos');
     }
 
-    let arrReturn = {};
+    let dataEncoded = data;
 
     for (let i = 0; i < tabela.campos.length; i++) {
       const campo = tabela.campos[i];
@@ -48,22 +48,22 @@ export class EncryptDataUseCase {
         // Pega a chave do array
         const chaveKey: any = arrType[0];
 
-        if(chaveKey === campo.nome) {
+        if (chaveKey === campo.nome) {
+
           // Pega o valor do array
           const value = arrType[1];
-
+          console.log(value);
           const type = this.getType(value);
-
+          console.log(type);
+          console.log(campo.token);
           const chaveKeyCrypt = await this.encryptData(type, value, campo.token);
 
-          arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
+          dataEncoded = { ...dataEncoded, [chaveKey]: chaveKeyCrypt };
         }
-
       }
     }
-    return arrReturn;
+    return dataEncoded;
   }
-
 
   getType(value: any): string {
     if (typeof value === 'string') {

@@ -1,4 +1,4 @@
-import { AppError } from '@shared/errors/AppError';
+import { AppError } from '../../../shared/errors/AppError';
 import { inject } from 'tsyringe';
 import { verificaData } from '../../../shared/utils/verificaData';
 import { DateData } from '../entities/DateData';

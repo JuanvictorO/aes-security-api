@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { verify } from 'jsonwebtoken';
-
-import { AppError } from '@shared/errors/AppError';
+import { AppError } from '../../shared/errors/AppError';
 
 import { container } from 'tsyringe';
 import { ShowClienteUseCase } from '@modules/cryptography/useCases/ShowClienteUseCase';

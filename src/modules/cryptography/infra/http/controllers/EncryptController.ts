@@ -1,10 +1,6 @@
-import { Request, RequestHandler, response, Response } from 'express';
+import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { instanceToInstance } from 'class-transformer';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
-import { generateStringSeed } from '@shared/utils/generateStringSeed';
-import { EncryptDataUseCase } from '@modules/cryptography/useCases/EncryptDataUseCase';
+import { EncryptDataUseCase } from '../../../useCases/EncryptDataUseCase';
 
 export class EncryptController {
   public async encrypt(req: Request, res: Response): Promise<Response> {

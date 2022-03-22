@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Campos } from './Campos';
 import { Cliente } from './Cliente';
 
 @Entity('tabela')
@@ -7,7 +8,7 @@ export class Tabela {
   id: string;
 
   @Column()
-  nome: string;
+  tabela_nome: string;
 
   @Column()
   cliente_id: string;
@@ -15,4 +16,7 @@ export class Tabela {
   @ManyToOne(() => Cliente)
   @JoinColumn({ name: 'cliente_id' })
   cliente: Cliente;
+
+  @OneToMany(() => Campos, campos => campos.tabela)
+  campos: Campos[];
 }

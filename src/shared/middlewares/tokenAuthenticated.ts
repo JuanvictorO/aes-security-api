@@ -27,10 +27,14 @@ export const ensureAuthenticated = async (request: Request, response: Response, 
   const cliente = await showClienteUseCase.execute({ auth_token: token });
 
   try {
-    const id = (await cliente).id;
+    const id = cliente.id;
+    const key_cript = cliente.key_cript;
+    const seed = cliente.seed;
 
     request.cliente = {
       id,
+      key_cript,
+      seed,
     };
 
     return next();

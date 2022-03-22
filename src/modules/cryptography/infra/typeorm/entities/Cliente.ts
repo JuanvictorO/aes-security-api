@@ -9,7 +9,7 @@ export class Cliente {
   auth_token: string;
 
   @Column()
-  key: string;
+  key_cript: string;
 
   @Column()
   seed: string;

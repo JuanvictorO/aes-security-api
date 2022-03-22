@@ -3,16 +3,22 @@ import { container } from 'tsyringe';
 import { instanceToInstance } from 'class-transformer';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import { generateStringSeed } from '@shared/utils/generateStringSeed';
+import { EncryptDataUseCase } from '@modules/cryptography/useCases/EncryptDataUseCase';
 
 export class encryptController {
   public async encrypt(req: Request, res: Response): Promise<Response> {
-    const { ...rest } = req.body;
+    const data: Array<Array<number | string | Date>> = Object.entries(req.body);
+    const cliente_id = req.cliente.id;
+    const { tabela_nome } = req.params;
 
-    //const encryptUseCase = container.resolve(EncryptUseCase);
+    //const stringSeed = generateStringSeed(table_name, Object.keys(req.body), 'SW50ZWdyaXR5RXhhbXBsZQ==');
 
-    //const dataEncoded = await encryptUseCase.execute({ name, email, phone, identify, password });
+    const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 
-    return response.json(instanceToInstance({ ...rest }));
+    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id });
+
+    return res.status(201).json(dataEncoded);
   }
 
   public async decrypt(req: Request, res: Response): Promise<Response> {

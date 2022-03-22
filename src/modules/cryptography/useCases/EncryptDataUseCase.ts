@@ -1,20 +1,58 @@
+import { AppError } from '@shared/errors/AppError';
+import { inject } from 'tsyringe';
 import { verificaData } from '../../../shared/utils/verificaData';
 import { DateData } from '../entities/DateData';
 import { IntegerData } from '../entities/IntegerData';
 import { StringData } from '../entities/StringData';
+import { CamposRepositoryInterface } from '../repositories/CamposRepositoryInterface';
+import { TabelaRepositoryInterface } from '../repositories/TabelaRepositoryInterface';
 
-export class CreateDataUseCase {
+type Request = {
   data: Array<Array<number | string | Date>>;
-  seed: string;
-  constructor(data: Array<Array<number | string | Date>>, seed: string) {
-    this.data = data;
-    this.seed = seed;
-  }
+  tabela_nome: string;
+  cliente_id: string;
+};
 
-  async execute(): Promise<any> {
+export class EncryptDataUseCase {
+  // data: Array<Array<number | string | Date>>;
+  // seed: string;
+  // constructor(data: Array<Array<number | string | Date>>, seed: string) {
+  //   this.data = data;
+  //   this.seed = seed;
+  // }
+  constructor(
+    @inject('TabelaRepository')
+    private tabelaRepository: TabelaRepositoryInterface,
+    @inject('CamposRepository')
+    private camposRepository: CamposRepositoryInterface,
+  ) {}
+
+  async execute({ data, tabela_nome, cliente_id }: Request): Promise<any> {
+    const tabela = await this.tabelaRepository.findOne({
+      where: {
+        cliente_id,
+        tabela_nome,
+      },
+      relations: ['campos'],
+    });
+
+    if (!tabela) {
+      throw new AppError('Tabela não encontrada');
+    }
+
+    if(tabela.campos.length === 0) {
+      throw new AppError('Tabela não possui campos');
+    }
+
+
     let arrReturn = {};
 
-    for (const arrType of this.data) {
+    for (let i = 0; i < tabela.campos.length; i++) {
+      const campo = tabela.campos[i];
+
+    }
+    
+    for (const arrType of data) {
       // Pega o valor do array
       let value = arrType[1];
 
@@ -44,18 +82,18 @@ export class CreateDataUseCase {
     }
   }
 
-  async encryptData(type: string, value: any, chaveKey:string): Promise<any> {
+  async encryptData(type: string, value: any, chaveKey: string): Promise<any> {
     switch (type) {
       case 'string':
         value = value as string;
-        const strObj = new StringData(value, "2cbacfc285bc26b617b2533ef91d7846b424f0a3719c31de68fd87e109cfa9f0");
+        const strObj = new StringData(value, '2cbacfc285bc26b617b2533ef91d7846b424f0a3719c31de68fd87e109cfa9f0');
         const strCrypt = await strObj.crypt();
 
         return strCrypt;
 
       case 'integer':
         value = value as number;
-        const intObj = new IntegerData(value, "eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170");
+        const intObj = new IntegerData(value, 'eaeb82825559672c919a1933cb515c2767bfe68d1b050867f2f552bdea9ca170');
         const intCrypt = intObj.crypt();
         return intCrypt;
 

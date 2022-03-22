@@ -23,10 +23,13 @@ export class DateData implements IData {
 
     const div: string[] = this.token.match(/.{16}/g) || [];
     const value = this.XOR_hex( div[0], div[1], div[2], div[3]);
+    const fromHexString = (hexString: any) => new Uint8Array(hexString.match(/.{1,2}/g).map((byte: string) => parseInt(byte, 16)));
 
-    const valInt = 2058867887756491758; // DESCOBRIR COMO CONVERTER O value PARA UInt64;
+    const arrayUInt8 = fromHexString(value); // DESCOBRIR COMO CONVERTER O value PARA UInt64;
 
-    const mod = valInt % 3652060;
+    const valInt = (new BigUint64Array(arrayUInt8.buffer)[0]).toString();
+
+    const mod = parseInt(valInt) % 3652060;
 
     const date = new Date(this.value);
 

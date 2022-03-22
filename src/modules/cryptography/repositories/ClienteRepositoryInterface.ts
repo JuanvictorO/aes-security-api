@@ -1,4 +1,4 @@
-import { BaseRepositoryInterface } from '@shared/repositories/BaseRepositoryInterface';
+import { BaseRepositoryInterface } from '../../../shared/repositories/BaseRepositoryInterface';
 
 import { Cliente } from '../infra/typeorm/entities/Cliente';
 

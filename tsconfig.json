@@ -19,11 +19,6 @@
     "target": "es2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "incremental": true,
-    "paths": {
-      "@modules/*": ["modules/*"],
-      "@config/*": ["config/*"],
-      "@shared/*": ["shared/*"]
-    }
+    "incremental": true
   }
 }

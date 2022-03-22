@@ -5,6 +5,7 @@ import { AppError } from '../../../shared/errors/AppError';
 import { Cliente } from '../infra/typeorm/entities/Cliente';
 import { ClienteRepositoryInterface } from '../repositories/ClienteRepositoryInterface';
 
+
 type Request = {
   auth_token: string;
 };

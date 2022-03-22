@@ -19,8 +19,7 @@ export class DateData implements IData {
     return res;
   }
 
-  crypt() {
-
+  getUInt64() {
     const div: string[] = this.token.match(/.{16}/g) || [];
     const value = this.XOR_hex( div[0], div[1], div[2], div[3]);
     const fromHexString = (hexString: any) => new Uint8Array(hexString.match(/.{1,2}/g).map((byte: string) => parseInt(byte, 16)));
@@ -31,6 +30,12 @@ export class DateData implements IData {
 
     const mod = parseInt(valInt) % 3652060;
 
+    return mod;
+  }
+
+  crypt() {
+
+    const mod = this.getUInt64();
     const date = new Date(this.value);
 
     date.setDate(date.getDate() + mod);
@@ -38,7 +43,12 @@ export class DateData implements IData {
     return moment.utc(date).format('YYYY-MM-DD');
   }
 
-  decrypt() {
-    return new Date(this.value);
+  decrypt( dateCrypted: string ) {
+    const mod = this.getUInt64();
+    const date = new Date(dateCrypted);
+
+    date.setDate(date.getDate() - mod);
+
+    return moment.utc(date).format('YYYY-MM-DD');
   }
 }

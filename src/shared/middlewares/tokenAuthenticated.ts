@@ -24,7 +24,7 @@ export const ensureAuthenticated = async (request: Request, response: Response, 
 
   const showClienteUseCase = container.resolve(ShowClienteUseCase);
 
-  const cliente = await ShowClienteUseCase.execute({ auth_token: token });
+  const cliente = await showClienteUseCase.execute({ auth_token: token });
 
   try {
     const id = (await cliente).id;

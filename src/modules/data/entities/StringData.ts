@@ -1,5 +1,4 @@
 import { IData } from '../../interfaces/DataInterface';
-import crypto from 'crypto';
 import aes from 'js-crypto-aes';
 export class StringData implements IData {
   value;
@@ -20,11 +19,21 @@ export class StringData implements IData {
       return encrypted;
     });
     const valueRet = Buffer.from(teste).toString('base64');
-
     return valueRet;
   }
 
-  decrypt() {
-    return this.value.slice(0, -1);
+  async decrypt( valueCrypted: string ) {
+    const div: string[] = this.token.match(/.{32}/g) || [];
+
+    const key = Buffer.from(div[0]);
+    const iv = Buffer.from(div[1], 'hex');
+
+    const teste2 = await aes.decrypt(new Uint8Array(Buffer.from(valueCrypted)), key, {name: 'AES-CBC', iv}).then( (decrypted) => {
+      return decrypted;
+    });
+
+    const message = Buffer.from(teste2).toString();
+
+    return message;
   }
 }

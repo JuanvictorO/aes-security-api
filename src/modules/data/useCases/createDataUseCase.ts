@@ -11,8 +11,8 @@ export class CreateDataUseCase {
     this.seed = seed;
   }
 
-  async execute(): Promise<any[]> {
-    let arrReturn = Array<any>();
+  async execute(): Promise<any> {
+    let arrReturn = {};
 
     for (const arrType of this.data) {
       // Pega o valor do array
@@ -25,9 +25,7 @@ export class CreateDataUseCase {
       const chaveKey: any = arrType[0];
 
       // Retorna o objeto criptografado
-      arrReturn.push(  {
-        [chaveKey]: await this.encryptData(type, value, chaveKey)
-      });
+      arrReturn = { ...arrReturn, [chaveKey]: await this.encryptData(type, value, chaveKey) };
     }
     return arrReturn;
   }

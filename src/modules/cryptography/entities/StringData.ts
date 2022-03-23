@@ -9,7 +9,7 @@ export class StringData implements IData {
   }
 
   base64ToArrayBuffer(base64: string){
-    var binary_string = atob(base64);
+    var binary_string = Buffer.from(base64, 'base64').toString('binary');
     var len = binary_string.length;
     var bytes = new Uint8Array(len);
     for (var i = 0; i < len; i++) {

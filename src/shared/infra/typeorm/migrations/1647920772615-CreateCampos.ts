@@ -27,6 +27,16 @@ export class CreateCampos1647920772615 implements MigrationInterface {
             length: '64',
           },
         ],
+        foreignKeys: [
+          {
+            name: 'TabelaCampos',
+            referencedTableName: 'tabela',
+            referencedColumnNames: ['id'],
+            columnNames: ['tabela_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+        ],
       }),
     );
   }

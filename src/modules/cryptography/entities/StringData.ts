@@ -8,6 +8,16 @@ export class StringData implements IData {
     this.token = chaveKey;
   }
 
+  base64ToArrayBuffer(base64: string){
+    var binary_string = atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
   async crypt() {
 
     const div: string[] = this.token.match(/.{32}/g) || [];
@@ -28,7 +38,10 @@ export class StringData implements IData {
     const key = Buffer.from(div[0]);
     const iv = Buffer.from(div[1], 'hex');
 
-    const teste2 = await aes.decrypt(new Uint8Array(Buffer.from(valueCrypted)), key, {name: 'AES-CBC', iv}).then( (decrypted) => {
+    const bufValue = Buffer.from(this.base64ToArrayBuffer(valueCrypted)); // Converte a string em base64 para arraybuffer
+    const uintValue = new Uint8Array(bufValue); // Converte o arraybuffer em uint8array
+
+    const teste2 = await aes.decrypt(uintValue, key, {name: 'AES-CBC', iv}).then( (decrypted) => {
       return decrypted;
     });
 

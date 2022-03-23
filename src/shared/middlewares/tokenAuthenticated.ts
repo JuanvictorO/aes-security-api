@@ -4,13 +4,6 @@ import { AppError } from '../../shared/errors/AppError';
 import { container } from 'tsyringe';
 import { ShowClienteUseCase } from '../../modules/cryptography/useCases/ShowClienteUseCase';
 
-interface JWTTokenPayload {
-  iat: number;
-  exp: number;
-  sub: string;
-  enterprise: string;
-}
-
 export const ensureAuthenticated = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
   const authHeaders = request.headers.authorization;
 

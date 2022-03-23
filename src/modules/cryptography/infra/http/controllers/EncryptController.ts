@@ -13,7 +13,7 @@ export class EncryptController {
 
     const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 
-    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id });
+    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id, decrypt: false });
 
     return res.status(201).send(instanceToInstance(dataEncoded));
   }
@@ -21,11 +21,10 @@ export class EncryptController {
   public async decrypt(req: Request, res: Response): Promise<Response> {
     const data: Array<Array<number | string | Date>> = Object.entries(req.body);
     const cliente_id = req.cliente.id;
-    const { tabela_nome } = req.params;
-
+    const { tableName: tabela_nome } = req.params;
     const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 
-    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id });
+    const dataEncoded = await encryptDataUseCase.execute({ data, tabela_nome, cliente_id, decrypt: true });
 
     return res.status(201).json(dataEncoded);
   }

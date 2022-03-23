@@ -31,14 +31,10 @@ export class IntegerData implements IData {
 
   crypt() {
     const valInt = this.getUInt64();
-
-    const crypted= this.value + (parseInt(valInt) % 2147483647);
-
     return this.value + (parseInt(valInt) % 2147483647);
   }
 
   decrypt( valueCrypted: number ) {
-
     const valInt = this.getUInt64();
 
     return valueCrypted - (parseInt(valInt) % 2147483647);

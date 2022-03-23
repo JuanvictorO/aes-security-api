@@ -11,6 +11,7 @@ type Request = {
   data: Array<Array<number | string | Date>>;
   tabela_nome: string;
   cliente_id: string;
+  decrypt?: boolean;
 };
 
 @injectable()
@@ -22,7 +23,7 @@ export class EncryptDataUseCase {
     private camposRepository: CamposRepositoryInterface,
   ) {}
 
-  async execute({ data, tabela_nome, cliente_id }: Request): Promise<any> {
+  async execute({ data, tabela_nome, cliente_id, decrypt }: Request): Promise<any> {
     const tabela = await this.tabelaRepository.findOne({
       where: {
         cliente_id,
@@ -54,7 +55,7 @@ export class EncryptDataUseCase {
           const type = this.getType(value);
 
           const columnName: any = arrType[0];
-          arrReturn = { ...arrReturn, [columnName]: await this.encryptData(type, value, campo.token) };
+          arrReturn = { ...arrReturn, [columnName]: await this.encryptData(type, value, campo.token, decrypt || false) };
         }
       }
     }
@@ -77,31 +78,32 @@ export class EncryptDataUseCase {
     }
   }
 
-  async encryptData(type: string, value: any, chaveKey: string): Promise<any> {
+  async encryptData(type: string, value: any, chaveKey: string, decrypt: boolean): Promise<any> {
+
     switch (type) {
       case 'string':
         value = value as string;
         const strObj = new StringData(value, chaveKey);
-        const strCrypt = await strObj.crypt();
+        const strCrypt = decrypt ? await strObj.decrypt(value) : await strObj.crypt();
 
         return strCrypt;
 
       case 'integer':
         value = value as number;
         const intObj = new IntegerData(value, chaveKey);
-        const intCrypt = intObj.crypt();
+        const intCrypt = decrypt ? intObj.decrypt(value) : intObj.crypt();
         return intCrypt;
 
       case 'float':
         value = value as number;
         const floatObj = new IntegerData(value, chaveKey);
-        const floatCrypt = floatObj.crypt();
+        const floatCrypt = decrypt ? floatObj.decrypt(value) : floatObj.crypt();
         return floatCrypt;
 
       case 'date':
         value = value as Date;
         const dateObj = new DateData(value, chaveKey);
-        const dateCrypt = dateObj.crypt();
+        const dateCrypt = decrypt ? dateObj.decrypt(value) : dateObj.crypt();
         return dateCrypt;
 
       default:

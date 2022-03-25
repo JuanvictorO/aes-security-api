@@ -1,7 +1,7 @@
 
 import moment from 'moment';
 import { IData } from '../../interfaces/DataInterface';
-export class DateData implements IData {
+export class DateData {
   value;
   token;
   dateMin: string= "1000-01-01";
@@ -11,21 +11,25 @@ export class DateData implements IData {
     this.token = chaveKey;
   }
   
-  XOR_hex(a: string, b: string, c: string, d: string) {
+  XOR_hex(a: string, b: string, c: string, d: string, e: string, f: string, g: string, h: string) {
     var res = "",
         i = a.length,
         j = b.length,
         k = c.length,
-        l = d.length;
-    while (i-->0 && j-->0 && k-->0 && l-->0)
-        res = (parseInt(a.charAt(i), 16) ^ parseInt(b.charAt(j), 16) ^ parseInt(c.charAt(k), 16) ^ parseInt(d.charAt(l), 16)).toString(16) + res;
+        l = d.length,
+        m = e.length,
+        n = f.length,
+        o = g.length,
+        p = h.length;
+    while (i-->0 && j-->0 && k-->0 && l-->0 && m-->0 && n-->0 && o-->0 && p-->0)
+        res = (parseInt(a.charAt(i), 16) ^ parseInt(b.charAt(j), 16) ^ parseInt(c.charAt(k), 16) ^ parseInt(d.charAt(l), 16) ^ parseInt( e.charAt(m), 16 ) ^ parseInt( f.charAt(n), 16 ) ^ parseInt( g.charAt(o), 16 ) ^ parseInt( h.charAt(p), 16 ) ).toString(16) + res;
     return res;
   }
 
   h2d() {
 
-    const div: string[] = this.token.match(/.{16}/g) || [];
-    const value = this.XOR_hex( div[0], div[1], div[2], div[3]);
+    const div: string[] = this.token.match(/.{8}/g) || [];
+    const value = this.XOR_hex( div[0], div[1], div[2], div[3], div[4], div[5], div[6], div[7] );
 
     function add(x: any, y: any) {
         var c = 0, r = [];
@@ -51,49 +55,49 @@ export class DateData implements IData {
     return dec;
   }
 
-  // motherfucker( JUMP: number){
-  //   // const mod =  JUMP % 3652060;
-    
-  //   // var VALOR = this.value;
-  //   var VALOR = "9463-07-15"; // this.value;
-  //   var diff = moment(VALOR,"YYYY-MM-DD").diff(moment(this.dateMin,"YYYY-MM-DD")); // Diferença entre a data mínima e a data informada
-
-
-  //   var dias = moment.duration(diff).asDays();
-
-  //   const sumDiasJump = parseInt(dias.toFixed(0) + JUMP);
-
-  //   const emDias = sumDiasJump % 3287176;
-    
-  //   var result = new Date(this.dateMin);
-  //   result.setDate(result.getDate() + emDias);    
-
-  //   // console.log( JUMP );
-  // }
-
   crypt() {
 
-    const JUMP = this.h2d();    
+    const JUMP = this.h2d();
+    
     // Diferença entre a data mínima e a data informada
     var diff = moment(this.value,"YYYY-MM-DD").diff(moment(this.dateMin,"YYYY-MM-DD"));
     var dias = moment.duration(diff).asDays();
 
-    const sumDiasJump = dias.toFixed(0) + JUMP;
+    var diasFixo = dias.toFixed(0);
 
-    const emDias = parseInt(sumDiasJump) % 3287176;
+
+    var jumpPlusDays: number = parseInt(diasFixo) + parseInt(JUMP);
+    
+    var limite: number = 3287177;
+    const emDias = jumpPlusDays % limite;
 
     var result = new Date(this.dateMin);
-    result.setDate(result.getDate() + emDias);  
-    
+
+    result.setUTCDate(result.getUTCDate() + emDias );  
+
     return moment.utc(result).format('YYYY-MM-DD');
   }
 
   decrypt( dateCrypted: string ) {
-    const mod = this.h2d();
-    const date = new Date(dateCrypted);
+    const JUMP = this.h2d();
+    
+    // Diferença entre a data mínima e a data informada
+    var diff = moment(dateCrypted,"YYYY-MM-DD").diff(moment(this.dateMin,"YYYY-MM-DD"));
+    var dias = moment.duration(diff).asDays();
 
-    // date.setDate(date.getDate() - mod);
+    var diasFixo = dias.toFixed(0);
 
-    return moment.utc(date).format('YYYY-MM-DD');
+    console.log(diasFixo); 
+
+    var jumpPlusDays: number = parseInt(diasFixo) + parseInt(JUMP);
+    
+    var limite: number = 3287177;
+    const emDias = jumpPlusDays % limite;
+
+    var result = new Date(this.dateMin);
+
+    result.setUTCDate(result.getUTCDate() - emDias );  
+
+    return moment.utc(result).format('YYYY-MM-DD');
   }
 }

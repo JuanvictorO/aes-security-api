@@ -1,9 +1,8 @@
+import { indexEncryptRouter } from '@modules/cryptography/infra/http/routes/index.routes';
 import { Router } from 'express';
-
-import { dataRouter } from '../../modules/cryptography/routes/index.routes';
 
 const routes = Router();
 
-routes.use('/api', dataRouter);
+routes.use('/api', indexEncryptRouter);
 
 export default routes;

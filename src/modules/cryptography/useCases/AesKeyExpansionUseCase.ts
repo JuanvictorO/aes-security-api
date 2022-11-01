@@ -41,11 +41,10 @@ export class AesKeyExpansionUseCase {
     const columnSeed = `${tableName}client_nameSW50ZWdyaXR5RXhhbXBsZQ==clientSince_dateSW50ZWdyaXR5RXhhbXBsZQ==cardHolder_nameSW50ZWdyaXR5RXhhbXBsZQ==card_numberSW50ZWdyaXR5RXhhbXBsZQ==cardExpiration_dateSW50ZWdyaXR5RXhhbXBsZQ==${columnName}`;
 
     const sha = SHA256(columnSeed).toString();
-
     const leftSha = `${sha}`.slice(0,32);
-    const rightSha = `${sha}`.slice(33,64);
-
+    const rightSha = `${sha}`.slice(32,64);
     const tokenFeistelWithAesSubKey = cypherFeistel(leftSha, rightSha, subKeys);
+
     return tokenFeistelWithAesSubKey;
   }
 }

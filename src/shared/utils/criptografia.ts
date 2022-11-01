@@ -38,31 +38,55 @@ export const convertStringToBinary = (str: string): string => {
 };
 
 export const cypherFeistel = (left: string, right: string, aesSubKeys: Array<string>): string => {
-  let leftBites = parseInt(hex2bin(left));
-  console.log(leftBites);
-  let rightBites = parseInt(hex2bin(right));
-
-  const binarySubKey = parseInt(hex2bin(aesSubKeys[0]));
-
-  console.log(binarySubKey);
-
-  const rightXorSubKey = binarySubKey ^ rightBites;
-
-  console.log(rightXorSubKey);
-
-  const leftXorSubKey = leftBites ^ rightXorSubKey;
-
-  return binaryAgent(`${parseInt(`${leftXorSubKey}`, 2).toString(16)}`);
-};
-
-export const binaryAgent = (str: string): string => {
-  const newBin = str.split(' ');
-  let binCode = [];
-
-  for (let i = 0; i < newBin.length; i++) {
-    binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+  for(let i = 0; i < 10; i++) {
+    const rightXorSubKey = hexXor(right, aesSubKeys[i]);
+    const leftXorSubKey = hexXor(left, rightXorSubKey);
+    right = leftXorSubKey;
+    left = rightXorSubKey;
   }
-  return binCode.join('');
+
+  return left + right;
 };
+
+export const hexXor = function (hex1: string, hex2: string) {
+  const buf1 = Buffer.from(hex1, 'hex');
+  const buf2 = Buffer.from(hex2, 'hex');
+  const bufResult = buf1.map((b, i) => b ^ buf2[i]);
+  return bufResult.toString('hex');
+};
+
+export const toHexString = function (byteArray: Uint8Array) {
+  return byteArray.reduce((output, elem) =>
+    (output + ('0' + elem.toString(16)).slice(-2)), '');
+};
+
+export const convertBase = function () {
+
+  function convertBase(baseFrom: number, baseTo: number) {
+      return function (num: string) {
+          return parseInt(num, baseFrom).toString(baseTo);
+      };
+  }
+
+  // binary to decimal
+  convertBase.bin2dec = convertBase(2, 10);
+
+  // binary to hexadecimal
+  convertBase.bin2hex = convertBase(2, 16);
+
+  // decimal to binary
+  convertBase.dec2bin = convertBase(10, 2);
+
+  // decimal to hexadecimal
+  convertBase.dec2hex = convertBase(10, 16);
+
+  // hexadecimal to binary
+  convertBase.hex2bin = convertBase(16, 2);
+
+  // hexadecimal to decimal
+  convertBase.hex2dec = convertBase(16, 10);
+
+  return convertBase;
+}();
 
 

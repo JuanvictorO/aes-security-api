@@ -9,8 +9,9 @@ import { TableRepositoryInterface } from '../repositories/TableRepositoryInterfa
 @injectable()
 export class CreateTableUseCase {
   constructor(
-    @inject('OfficeRepository')
+    @inject('TableRepository')
     private tableRepository: TableRepositoryInterface,
+    @inject('BaseRepository')
     private baseRepository: BaseRepository,
   ) {}
 

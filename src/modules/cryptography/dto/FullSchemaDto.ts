@@ -11,7 +11,7 @@ interface Table {
   columns: Column[];
 }
 
-interface Column {
+export interface Column {
   name: string;
   type: string;
 }

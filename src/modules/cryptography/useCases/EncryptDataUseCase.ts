@@ -1,44 +1,57 @@
 import { AppError } from '@shared/errors/AppError';
 import { verificaData } from '@shared/utils/verificaData';
 import { inject, injectable } from 'tsyringe';
+import { Column } from '../dto/FullSchemaDto';
 import { DateData } from '../entities/DateData';
 import { IntegerData } from '../entities/IntegerData';
 import { StringData } from '../entities/StringData';
-import { CamposRepositoryInterface } from '../repositories/FieldRepositoryInterface';
-import { TabelaRepositoryInterface } from '../repositories/TableRepositoryInterface';
+import { BaseRepositoryInterface } from '../repositories/BaseRepositoryInterface';
+import { ClientRepositoryInterface } from '../repositories/ClientRepositoryInterface';
+import { TableRepositoryInterface } from '../repositories/TableRepositoryInterface';
 
 type Request = {
-  data: Array<Array<number | string | Date>>;
-  tabela_nome: string;
-  cliente_id: string;
-  decrypt?: boolean;
+  client_id: string;
+  data: any;
+  table_name: string;
+  isDecrypt?: boolean;
 };
 
 @injectable()
 export class EncryptDataUseCase {
   constructor(
-    @inject('TabelaRepository')
-    private tabelaRepository: TabelaRepositoryInterface,
-    @inject('CamposRepository')
-    private camposRepository: CamposRepositoryInterface,
+    @inject('ClientRepository')
+    private clientRepository: ClientRepositoryInterface,
+    @inject('BaseRepository')
+    private baseRepository: BaseRepositoryInterface,
+    @inject('TableRepository')
+    private tableRepository: TableRepositoryInterface
   ) {}
 
-  async execute({ data, decrypt }: Request): Promise<any> {
-    /*const tabela = await this.tabelaRepository.findOne({
-      where: {
-        cliente_id,
-        tabela_nome,
-      },
-      relations: ['campos'],
-    });*/
-
-    /*if (!tabela) {
-      throw new AppError('Tabela não encontrada');
+  async execute({ client_id, data, table_name, isDecrypt }: Request): Promise<any> {
+    const client = await this.clientRepository.findOne(client_id);
+    if (!client) {
+      throw new AppError('Client not found');
     }
-    if (tabela.campos.length === 0) {
-      throw new AppError('Tabela não possui campos');
-    }*/
-    let arrReturn = {};
+
+    const base_id = await this.baseRepository.findOne({ client_id: client.id });
+    if (!base_id) {
+      throw new AppError('Base has not been created');
+    }
+
+    const table = await this.tableRepository.findOne({ table_name });
+    if (!table) {
+      throw new AppError('Table not found');
+    }
+
+    const columns = table.fields;
+
+    const arrReturn = data.map(())
+    columns.forEach((column) => {
+        //const findColumn = data.find(element => Object.keys(element) === column.name);
+        //if (findColumn) {
+
+        //}
+    });
     for (let i = 0; i < tabela.campos.length; i++) {
       const campo = tabela.campos[i];
 

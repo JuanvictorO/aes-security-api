@@ -14,7 +14,7 @@ export class Base {
   name: string;
 
   @ManyToOne(() => Client)
-  @JoinColumn({ name: 'cliente_id' })
+  @JoinColumn({ name: 'client_id' })
   client: Client;
 
   @OneToMany(() => Table, table => table.base)

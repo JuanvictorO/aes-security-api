@@ -3,15 +3,12 @@ import { inject, injectable } from 'tsyringe';
 import { BaseDto } from '../dto/BaseDto';
 import { Base } from '../infra/typeorm/entities/Base';
 import { BaseRepositoryInterface } from '../repositories/BaseRepositoryInterface';
-import { ClientRepositoryInterface } from '../repositories/ClientRepositoryInterface';
 
 @injectable()
 export class CreateBaseUseCase {
   constructor(
-    @inject('OfficeRepository')
+    @inject('BaseRepository')
     private baseRepository: BaseRepositoryInterface,
-    @inject('ClientRepository')
-    private clientRepository: ClientRepositoryInterface,
   ) {}
 
   public async execute({ client_id, name }: BaseDto): Promise<Base> {

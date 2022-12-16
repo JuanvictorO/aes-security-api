@@ -1,7 +1,7 @@
 import { EncryptController } from '@modules/cryptography/infra/http/controllers/EncryptController';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
-import { AesController } from './src/modules/cryptography/infra/http/controllers/AesController';
+import { AesController } from './src/modules/cryptography/infra/http/controllers/GeneralController';
 
 const aesController = new AesController();
 const encryptController = new EncryptController();

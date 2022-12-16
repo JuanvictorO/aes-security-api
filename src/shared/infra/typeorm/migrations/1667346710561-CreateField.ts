@@ -26,11 +26,11 @@ export class CreateField1667346710561 implements MigrationInterface {
             type: 'varchar',
             length: '64',
             isNullable: true,
+            default: 'null',
           },
           {
             name: 'field_type_id',
             type: 'int',
-            isNullable: true,
           }
         ],
         foreignKeys: [

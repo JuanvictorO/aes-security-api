@@ -18,5 +18,5 @@ export class Table {
   base: Base;
 
   @OneToMany(() => Field, field => field.table)
-  field: Field[];
+  fields: Field[];
 }

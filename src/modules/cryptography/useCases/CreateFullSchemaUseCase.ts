@@ -13,13 +13,9 @@ export class CreateFullSchemaUseCase {
   constructor(
     @inject('ClientRepository')
     private clientRepository: ClientRepositoryInterface,
-    @inject('CreateBaseUseCase')
     private createBaseUseCase: CreateBaseUseCase,
-    @inject('CreateTableUseCase')
     private createTableUseCase: CreateTableUseCase,
-    @inject('CreateFieldUseCase')
     private createFieldUseCase: CreateFieldUseCase,
-    @inject('GenerateTokenUseCase')
     private generateTokenUseCase: GenerateTokenUseCase,
   ) {}
 
@@ -34,24 +30,39 @@ export class CreateFullSchemaUseCase {
     client.seed = seed;
     client.encrypt_key = encrypt_key;
 
-    try {
-      await this.clientRepository.save(client);
+    await this.clientRepository.save(client);
 
-      const base = await this.createBaseUseCase.execute({ client_id, name: database_name });
-      tables.forEach(async (element) => {
-        const table = await this.createTableUseCase.execute({ base_id: base.id, table_name: element.name });
+    const base = await this.createBaseUseCase.execute({ client_id, name: database_name });
 
-        const columnsName = element.columns.map((column) => {
-          return column.name;
-        })
-        element.columns.forEach(async (column) => {
-          const token = this.generateTokenUseCase.execute({ table_name: table.table_name, column_name: column.name, encrypt_key, seed, table_columns_name: columnsName  });
-          await this.createFieldUseCase.execute({ table_id: table.id, field_type_name: column.type, name: column.name, token })
+    for (let i = 0; i < tables.length; i++) {
+      const indexTable = tables[i];
+      if (!indexTable.name || !indexTable.columns) {
+        throw new AppError('Need to pass table name and columns');
+      }
+
+      const table = await this.createTableUseCase.execute({ base_id: base.id, table_name: indexTable.name });
+
+      for (let x = 0; x < indexTable.columns.length; x++) {
+        const indexColumn = indexTable.columns[x];
+        if (!indexColumn.name || !indexColumn.type) {
+          throw new AppError('Need to pass column name and type');
+        }
+
+        const token = this.generateTokenUseCase.execute({
+          table_name: table.table_name,
+          column_name: indexColumn.name,
+          encrypt_key,
+          seed,
+          table_columns_name: indexTable.columns,
         });
-      });
 
-    } catch (err) {
-      throw new AppError(err);
+        await this.createFieldUseCase.execute({
+          table_id: table.id,
+          field_type_name: indexColumn.type,
+          name: indexColumn.name,
+          token,
+        });
+      }
     }
   }
 }

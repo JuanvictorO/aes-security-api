@@ -1,14 +1,14 @@
-import { AppError } from '@shared/errors/AppError';
 import { convertStringToHex, cypherFeistel, keyExpansion, subkeysByteToHex } from '@shared/utils/criptografia';
 import { injectable } from 'tsyringe';
 import { SHA256 } from 'crypto-js';
+import { Column } from '../dto/FullSchemaDto';
 
 interface Data {
   table_name: string;
   column_name: string;
   encrypt_key: string;
   seed: string;
-  table_columns_name: Array<string>;
+  table_columns_name: Array<Column>;
 }
 @injectable()
 export class GenerateTokenUseCase {
@@ -22,11 +22,13 @@ export class GenerateTokenUseCase {
     const bufferSeed = Buffer.from(seed);
     const seedBase64 = Buffer.from(bufferSeed).toString('base64');
 
-    let columnSeed = `${table_name}${column_name}`
-    columnSeed += table_columns_name.map((name) => {
-      return `${seedBase64}==${name}`;
+    let columnSeed = `${table_name}${table_columns_name[0].name}`
+    table_columns_name.forEach((column, index) => {
+      if(index != 0) {
+        columnSeed = `${columnSeed}${seedBase64}${column.name}`;
+      }
     });
-    columnSeed += `${seedBase64}==${column_name}`;
+    columnSeed = `${columnSeed}${seedBase64}${column_name}`;
 
     const sha = SHA256(columnSeed).toString();
     const leftSha = `${sha}`.slice(0, 32);

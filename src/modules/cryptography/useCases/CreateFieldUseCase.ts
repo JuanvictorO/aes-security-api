@@ -24,7 +24,8 @@ export class CreateFieldUseCase {
       throw new AppError('Table not found');
     }
 
-    const fieldType = await this.fieldTypeRepository.findOne({type_name: field_type_name.toUpperCase()});
+    const uppercaseFieldTypeName = field_type_name.toUpperCase();
+    const fieldType = await this.fieldTypeRepository.findOne({type_name: uppercaseFieldTypeName});
     if (!fieldType) {
       throw new AppError('FieldType not found');
     }

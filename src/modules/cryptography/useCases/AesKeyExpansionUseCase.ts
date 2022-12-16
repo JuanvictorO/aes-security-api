@@ -4,11 +4,14 @@ import { inject, injectable } from 'tsyringe';
 import Base64 from 'crypto-js/enc-base64';
 import { SHA256 } from 'crypto-js';
 
+interface Data {
+  column_name: string;
+}
 @injectable()
 export class AesKeyExpansionUseCase {
-  public async execute(): Promise<any> {
+  public async execute(data: Data): Promise<any> {
     const tableName = 'exampleTable';
-    const columnName = 'client_name';
+    const columnName = data.column_name;
     const encryptKey = process.env.EncryptKey;
     if (!encryptKey) {
       throw new AppError('Undefined Encrypt Key');
@@ -36,7 +39,7 @@ export class AesKeyExpansionUseCase {
 
     //const seedToBinary = convertStringToBinary(entropySeed);
 
-    const base64EncodedStr = btoa(unescape(encodeURIComponent(entropySeed)));
+    //const base64EncodedStr = btoa(unescape(encodeURIComponent(entropySeed)));
 
     const columnSeed = `${tableName}client_nameSW50ZWdyaXR5RXhhbXBsZQ==clientSince_dateSW50ZWdyaXR5RXhhbXBsZQ==cardHolder_nameSW50ZWdyaXR5RXhhbXBsZQ==card_numberSW50ZWdyaXR5RXhhbXBsZQ==cardExpiration_dateSW50ZWdyaXR5RXhhbXBsZQ==${columnName}`;
 

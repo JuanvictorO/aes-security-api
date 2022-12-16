@@ -10,7 +10,7 @@ export class DateData {
     this.value = value;
     this.token = chaveKey;
   }
-  
+
   XOR_hex(a: string, b: string, c: string, d: string, e: string, f: string, g: string, h: string) {
     var res = "",
         i = a.length,
@@ -37,7 +37,7 @@ export class DateData {
         var y = y.split('').map(Number);
         while(x.length || y.length) {
             var s = (x.pop() || 0) + (y.pop() || 0) + c;
-            r.unshift(s < 10 ? s : s - 10); 
+            r.unshift(s < 10 ? s : s - 10);
             c = s < 10 ? 0 : 1;
         }
         if(c) r.unshift(c);
@@ -58,7 +58,7 @@ export class DateData {
   crypt() {
 
     const JUMP = this.h2d();
-    
+
     // Diferença entre a data mínima e a data informada
     var diff = moment(this.value,"YYYY-MM-DD").diff(moment(this.dateMin,"YYYY-MM-DD"));
     var dias = moment.duration(diff).asDays();
@@ -67,36 +67,36 @@ export class DateData {
 
 
     var jumpPlusDays: number = parseInt(diasFixo) + parseInt(JUMP);
-    
+
     var limite: number = 3287177;
     const emDias = jumpPlusDays % limite;
 
     var result = new Date(this.dateMin);
 
-    result.setUTCDate(result.getUTCDate() + emDias );  
+    result.setUTCDate(result.getUTCDate() + emDias );
 
     return moment.utc(result).format('YYYY-MM-DD');
   }
 
   decrypt( dateCrypted: string ) {
     const JUMP = this.h2d();
-    
+
     // Diferença entre a data mínima e a data informada
     var diff = moment(dateCrypted,"YYYY-MM-DD").diff(moment(this.dateMin,"YYYY-MM-DD"));
     var dias = moment.duration(diff).asDays();
 
     var diasFixo = dias.toFixed(0);
 
-    console.log(diasFixo); 
+    console.log(diasFixo);
 
     var jumpPlusDays: number = parseInt(diasFixo) + parseInt(JUMP);
-    
+
     var limite: number = 3287177;
     const emDias = jumpPlusDays % limite;
 
     var result = new Date(this.dateMin);
 
-    result.setUTCDate(result.getUTCDate() - emDias );  
+    result.setUTCDate(result.getUTCDate() - emDias );
 
     return moment.utc(result).format('YYYY-MM-DD');
   }

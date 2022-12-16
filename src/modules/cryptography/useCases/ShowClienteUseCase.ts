@@ -1,30 +1,27 @@
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 
-import { Cliente } from '../infra/typeorm/entities/Cliente';
-import { ClienteRepositoryInterface } from '../repositories/ClienteRepositoryInterface';
+import { Client } from '../infra/typeorm/entities/Client';
+import { ClientRepositoryInterface } from '../repositories/ClientRepositoryInterface';
 
 type Request = {
   auth_token: string;
 };
 
 @injectable()
-export class ShowClienteUseCase {
-  static execute(arg0: { auth_token: string }) {
-    throw new Error('Method not implemented.');
-  }
+export class ShowClientUseCase {
   constructor(
-    @inject('ClienteRepository')
-    private clienteRepository: ClienteRepositoryInterface,
+    @inject('ClientRepository')
+    private clientRepository: ClientRepositoryInterface,
   ) {}
 
-  public async execute({ auth_token }: Request): Promise<Cliente> {
-    const Cliente = await this.clienteRepository.findOne({ auth_token });
+  public async execute(auth_token: string): Promise<Client> {
+    const client = await this.clientRepository.findOne({ auth_token });
 
-    if (!Cliente) {
-      throw new AppError('Token not found');
+    if (!client) {
+      throw new AppError('Client not found');
     }
 
-    return Cliente;
+    return client;
   }
 }

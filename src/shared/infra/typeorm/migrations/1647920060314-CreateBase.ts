@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTabela1647920188153 implements MigrationInterface {
+export class CreateBase1647920060306 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'tabela',
+        name: 'base',
         columns: [
           {
             name: 'id',
@@ -13,21 +13,22 @@ export class CreateTabela1647920188153 implements MigrationInterface {
             generationStrategy: 'uuid',
           },
           {
-            name: 'cliente_id',
+            name: 'client_id',
             type: 'varchar',
+            length: '300',
           },
           {
-            name: 'tabela_nome',
+            name: 'name',
             type: 'varchar',
-            length: '32',
-          },
+            length: '64',
+          }
         ],
         foreignKeys: [
           {
-            name: 'ClienteTabela',
-            referencedTableName: 'cliente',
+            name: 'ClientTable',
+            referencedTableName: 'client',
             referencedColumnNames: ['id'],
-            columnNames: ['cliente_id'],
+            columnNames: ['client_id'],
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
@@ -37,6 +38,6 @@ export class CreateTabela1647920188153 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('tabela');
+    await queryRunner.dropTable('base');
   }
 }

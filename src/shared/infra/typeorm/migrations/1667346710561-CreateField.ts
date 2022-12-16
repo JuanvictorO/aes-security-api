@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateCampos1647920772615 implements MigrationInterface {
+export class CreateField1667346710561 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'campos',
+        name: 'field',
         columns: [
           {
             name: 'id',
@@ -13,11 +13,11 @@ export class CreateCampos1647920772615 implements MigrationInterface {
             generationStrategy: 'uuid',
           },
           {
-            name: 'tabela_id',
+            name: 'table_id',
             type: 'varchar',
           },
           {
-            name: 'nome',
+            name: 'name',
             type: 'varchar',
             length: '64',
           },
@@ -25,23 +25,37 @@ export class CreateCampos1647920772615 implements MigrationInterface {
             name: 'token',
             type: 'varchar',
             length: '64',
+            isNullable: true,
           },
+          {
+            name: 'field_type_id',
+            type: 'int',
+            isNullable: true,
+          }
         ],
         foreignKeys: [
           {
-            name: 'TabelaCampos',
-            referencedTableName: 'tabela',
+            name: 'TableField',
+            referencedTableName: 'table',
             referencedColumnNames: ['id'],
-            columnNames: ['tabela_id'],
+            columnNames: ['table_id'],
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
+          {
+            name: 'FieldFieldType',
+            referencedTableName: 'field_type',
+            referencedColumnNames: ['id'],
+            columnNames: ['field_type_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          }
         ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('campos');
+    await queryRunner.dropTable('field');
   }
 }

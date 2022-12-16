@@ -8,7 +8,7 @@ export class AesController {
   public async test(req: Request, res: Response): Promise<Response> {
     const aesDataUseCase = container.resolve(AesKeyExpansionUseCase);
 
-    const dataEncoded = await aesDataUseCase.execute();
+    const dataEncoded = await aesDataUseCase.execute(req.body);
 
     return res.status(201).send(instanceToInstance(dataEncoded));
   }

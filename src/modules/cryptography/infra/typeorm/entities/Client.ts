@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('cliente')
-export class Cliente {
+@Entity('client')
+export class Client {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -9,7 +9,7 @@ export class Cliente {
   auth_token: string;
 
   @Column()
-  key_cript: string;
+  encrypt_key: string;
 
   @Column()
   seed: string;

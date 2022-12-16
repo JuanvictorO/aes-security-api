@@ -4,8 +4,8 @@ import { inject, injectable } from 'tsyringe';
 import { DateData } from '../entities/DateData';
 import { IntegerData } from '../entities/IntegerData';
 import { StringData } from '../entities/StringData';
-import { CamposRepositoryInterface } from '../repositories/CamposRepositoryInterface';
-import { TabelaRepositoryInterface } from '../repositories/TabelaRepositoryInterface';
+import { CamposRepositoryInterface } from '../repositories/FieldRepositoryInterface';
+import { TabelaRepositoryInterface } from '../repositories/TableRepositoryInterface';
 
 type Request = {
   data: Array<Array<number | string | Date>>;
@@ -23,22 +23,21 @@ export class EncryptDataUseCase {
     private camposRepository: CamposRepositoryInterface,
   ) {}
 
-  async execute({ data, tabela_nome, cliente_id, decrypt }: Request): Promise<any> {
-    const tabela = await this.tabelaRepository.findOne({
+  async execute({ data, decrypt }: Request): Promise<any> {
+    /*const tabela = await this.tabelaRepository.findOne({
       where: {
         cliente_id,
         tabela_nome,
       },
       relations: ['campos'],
-    });
+    });*/
 
-    if (!tabela) {
+    /*if (!tabela) {
       throw new AppError('Tabela não encontrada');
     }
-
     if (tabela.campos.length === 0) {
       throw new AppError('Tabela não possui campos');
-    }
+    }*/
     let arrReturn = {};
     for (let i = 0; i < tabela.campos.length; i++) {
       const campo = tabela.campos[i];
@@ -48,14 +47,16 @@ export class EncryptDataUseCase {
         const chaveKey: any = arrType[0];
 
         if (chaveKey === campo.nome) {
-
           // Pega o valor do array
           const value = arrType[1];
 
           const type = this.getType(value);
 
           const columnName: any = arrType[0];
-          arrReturn = { ...arrReturn, [columnName]: await this.encryptData(type, value, campo.token, decrypt || false) };
+          arrReturn = {
+            ...arrReturn,
+            [columnName]: await this.encryptData(type, value, campo.token, decrypt || false),
+          };
         }
       }
     }
@@ -78,7 +79,6 @@ export class EncryptDataUseCase {
   }
 
   async encryptData(type: string, value: any, chaveKey: string, decrypt: boolean): Promise<any> {
-
     switch (type) {
       case 'string':
         value = value as string;

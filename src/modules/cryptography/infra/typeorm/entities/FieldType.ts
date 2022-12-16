@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('field_type')
 export class FieldType {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   type_name: string;

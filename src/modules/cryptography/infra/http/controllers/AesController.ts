@@ -1,4 +1,4 @@
-import { AesKeyExpansionUseCase } from '@modules/cryptography/useCases/AesKeyExpansionUseCase';
+import { AesKeyExpansionUseCase } from '@modules/cryptography/useCases/GenerateTokenUseCase';
 import { EncryptDataUseCase } from '@modules/cryptography/useCases/EncryptDataUseCase';
 import { instanceToInstance } from 'class-transformer';
 import { Request, Response } from 'express';

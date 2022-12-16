@@ -99,14 +99,14 @@ export const hexXor = function (hex1: string, hex2: string) {
   const bufResult = buf1.map((b, i) => b ^ buf2[i]);
   return bufResult.toString('hex');
 };
-
+  
 export const toHexString = function (byteArray: Uint8Array|number[]) {
   return byteArray.reduce((output, elem) =>
     (output + ('0' + elem.toString(16)).slice(-2)), '');
 };
 
 export const stringToBytes = (key: string) => {
-  return key.replace(/ /g, '').match(/(..?)/g).map(b => parseInt('0x'+b));
+  return key.replace(/ /g, '').match(/(..?)/g)?.map(b => parseInt('0x'+b));
 };
 
 export function keyExpansion(keyHex: string) {

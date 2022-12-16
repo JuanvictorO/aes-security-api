@@ -10,34 +10,35 @@ generalRouter.post(
   '/create/schema/',
   celebrate({
     [Segments.BODY]: {
-      seed: Joi.string(),
-      encrypt_key: Joi.string().max(16).min(16),
-      database_name: Joi.string(),
-      tables: Joi.array()
+      seed: Joi.string().required(),
+      encrypt_key: Joi.string().max(16).min(16).required(),
+      database_name: Joi.string().required(),
+      tables: Joi.array().required()
     },
   }),
   generalController.createSchema,
 );
 
-/*
-encryptRouter.post(
-  '/encrypt/:table',
+generalRouter.post(
+  '/encrypt',
   celebrate({
     [Segments.BODY]: {
-      data: Joi.array().required(),
+      table_name: Joi.string().required(),
+      data: Joi.array().required()
     },
   }),
   generalController.encrypt,
 );
 
-encryptRouter.post(
-  '/decrypt/:table',
+generalRouter.post(
+  '/decrypt',
   celebrate({
     [Segments.BODY]: {
-      data: Joi.array().required(),
+      table_name: Joi.string().required(),
+      data: Joi.array().required()
     },
   }),
-  generalController.decrypt,
+  generalController.encrypt,
 );
-*/
+
 export { generalRouter };

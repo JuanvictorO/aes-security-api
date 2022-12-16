@@ -24,7 +24,7 @@ export class EncryptDataUseCase {
     @inject('BaseRepository')
     private baseRepository: BaseRepositoryInterface,
     @inject('TableRepository')
-    private tableRepository: TableRepositoryInterface
+    private tableRepository: TableRepositoryInterface,
   ) {}
 
   async execute({ client_id, data, table_name, isDecrypt }: Request): Promise<any> {
@@ -38,83 +38,81 @@ export class EncryptDataUseCase {
       throw new AppError('Base has not been created');
     }
 
-    const table = await this.tableRepository.findOne({ table_name });
+    const table = await this.tableRepository.findOne(
+      { table_name },
+      {
+        relations: ['fields', 'fields.fieldType'],
+      },
+    );
     if (!table) {
       throw new AppError('Table not found');
     }
 
     const columns = table.fields;
+    let result: any = [];
+    for (const obj of data) {
+      let tempObj = {}
+      const propertyNames = Object.keys(obj);
 
-    const arrReturn = data.map(())
-    columns.forEach((column) => {
-        //const findColumn = data.find(element => Object.keys(element) === column.name);
-        //if (findColumn) {
+      for(const ele of propertyNames) {
+        const findColumn = columns.find(column => column.name === ele);
+        if (findColumn) {
+          const codedColumn = await this.encryptData(
+            findColumn.fieldType.type_name,
+            obj[ele],
+            findColumn.token,
+            isDecrypt,
+          );
 
-        //}
-    });
-    for (let i = 0; i < tabela.campos.length; i++) {
-      const campo = tabela.campos[i];
-
-      for (const arrType of data) {
-        // Pega a chave do array
-        const chaveKey: any = arrType[0];
-
-        if (chaveKey === campo.nome) {
-          // Pega o valor do array
-          const value = arrType[1];
-
-          const type = this.getType(value);
-
-          const columnName: any = arrType[0];
-          arrReturn = {
-            ...arrReturn,
-            [columnName]: await this.encryptData(type, value, campo.token, decrypt || false),
+          tempObj = {
+            ...tempObj,
+            [ele]: codedColumn,
+          };
+        } else {
+          tempObj = {
+            ...tempObj,
+            [ele]: obj[ele],
           };
         }
       }
+      result.push(tempObj);
     }
-
-    return arrReturn;
+    console.log(result);
+    return result;
   }
 
-  getType(value: any): string {
-    if (typeof value === 'string') {
-      return verificaData(value) ? 'date' : 'string';
-    } else if (typeof value === 'number') {
-      if (Number.isInteger(value)) {
-        return 'integer';
-      } else {
-        return 'float';
-      }
-    } else {
-      throw new Error('Tipo não suportado');
+  private validateType(value: any, type: string): void {
+    if (
+      (type === 'STRING' && (typeof value !== 'string' || verificaData(value) === true)) ||
+      (type === 'DATE' && (typeof value !== 'string' || verificaData(value) === false)) ||
+      (type === 'INT' && typeof value !== 'number')
+    ) {
+      throw new AppError(
+        `Value not corresponds with type informed [${value}, typeExpeted: ${type}, typeFounded: ${typeof value}]`,
+      );
     }
   }
 
-  async encryptData(type: string, value: any, chaveKey: string, decrypt: boolean): Promise<any> {
+  private async encryptData(type: string, value: any, token: string, decrypt?: boolean): Promise<any> {
+    //this.validateType(value, type);
+    console.log(type, value, token, decrypt);
     switch (type) {
-      case 'string':
+      case 'STRING':
         value = value as string;
-        const strObj = new StringData(value, chaveKey);
+        const strObj = new StringData(value, token);
         const strCrypt = decrypt ? await strObj.decrypt(value) : await strObj.crypt();
 
         return strCrypt;
 
-      case 'integer':
+      case 'INT':
         value = value as number;
-        const intObj = new IntegerData(value, chaveKey);
+        const intObj = new IntegerData(value, token);
         const intCrypt = decrypt ? intObj.decrypt(value) : intObj.crypt();
         return intCrypt;
 
-      case 'float':
-        value = value as number;
-        const floatObj = new IntegerData(value, chaveKey);
-        const floatCrypt = decrypt ? floatObj.decrypt(value) : floatObj.crypt();
-        return floatCrypt;
-
-      case 'date':
+      case 'DATE':
         value = value as Date;
-        const dateObj = new DateData(value, chaveKey);
+        const dateObj = new DateData(value, token);
         const dateCrypt = decrypt ? dateObj.decrypt(value) : dateObj.crypt();
         return dateCrypt;
 

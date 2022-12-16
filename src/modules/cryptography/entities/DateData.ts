@@ -55,7 +55,8 @@ export class DateData {
   }
 
   crypt() {
-    return new Date(this.value.getTime() + (parseInt(this.h2d()) % this.timestamp));
+    const dateValue = new Date(this.value);
+    return new Date(dateValue.getTime() + (parseInt(this.h2d()) % this.timestamp));
   }
 
   decrypt( dateCrypted: string ) {

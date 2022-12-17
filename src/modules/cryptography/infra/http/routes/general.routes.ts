@@ -38,7 +38,7 @@ generalRouter.post(
       data: Joi.array().required()
     },
   }),
-  generalController.encrypt,
+  generalController.decrypt,
 );
 
 export { generalRouter };

@@ -1,5 +1,7 @@
 import { IData } from '../../interfaces/DataInterface';
-import aes from 'js-crypto-aes';
+//import aes from 'js-crypto-aes';
+import { AES, enc, mode, pad } from 'crypto-js';
+import { convertHexToString } from '@shared/utils/criptografia';
 export class StringData implements IData {
   value;
   token: string;
@@ -18,37 +20,33 @@ export class StringData implements IData {
     return bytes.buffer;
   }
 
-  async crypt() {
+  crypt() {
     const div: string[] = this.token.match(/.{32}/g) || [];
-    console.log(div)
-    const key = new Uint8Array(Buffer.from(div[0]));
-    const iv = Buffer.from(div[1], 'hex');
-    console.log(iv)
-    const value = new Uint8Array(Buffer.from(this.value));
-    console.log(value);
-    const teste = await aes.encrypt(value, key, {name: 'AES-CBC', iv});
-    console.log(teste);
-    const valueRet = Buffer.from(teste).toString('base64');
-    console.log(valueRet);
-    return valueRet;
-  }
+    const key = enc.Hex.parse(div[0]);
+    const iv = enc.Hex.parse(div[1]);
 
-  async decrypt( valueCrypted: string ) {
-    const div: string[] = this.token.match(/.{32}/g) || [];
-
-    const key = Buffer.from(div[0]);
-    const iv = Buffer.from(div[1], 'hex');
-
-    const bufValue = Buffer.from(this.base64ToArrayBuffer(valueCrypted)); // Converte a string em base64 para arraybuffer
-    const uintValue = new Uint8Array(bufValue); // Converte o arraybuffer em uint8array
-
-
-    const teste2 = await aes.decrypt(uintValue, key, {name: 'AES-CBC', iv}).then( (decrypted) => {
-      return decrypted;
+    const aesEncrypt = AES.encrypt(this.value, key, {
+      keySize: 128/8,
+      iv: iv,
+      mode: mode.CBC,
     });
 
-    const message = Buffer.from(teste2).toString();
+    return aesEncrypt.toString();
+  }
 
-    return message;
+  decrypt() {
+    const div: string[] = this.token.match(/.{32}/g) || [];
+
+    const key = enc.Hex.parse(div[0]);
+    const iv = enc.Hex.parse(div[1]);
+
+    const aesDecryptHex = AES.decrypt(this.value, key, {
+      keySize: 128/8,
+      iv: iv,
+      mode: mode.CBC,
+    });
+    const dataDecrypted = convertHexToString(aesDecryptHex.toString());
+
+    return dataDecrypted;
   }
 }

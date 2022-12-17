@@ -57,7 +57,7 @@ export class EncryptDataUseCase {
       for(const ele of propertyNames) {
         const findColumn = columns.find(column => column.name === ele);
         if (findColumn) {
-          const codedColumn = await this.encryptData(
+          const codedColumn = this.encryptData(
             findColumn.fieldType.type_name,
             obj[ele],
             findColumn.token,
@@ -77,7 +77,7 @@ export class EncryptDataUseCase {
       }
       result.push(tempObj);
     }
-    console.log(result);
+
     return result;
   }
 
@@ -93,14 +93,14 @@ export class EncryptDataUseCase {
     }
   }
 
-  private async encryptData(type: string, value: any, token: string, decrypt?: boolean): Promise<any> {
+  private encryptData(type: string, value: any, token: string, decrypt?: boolean): any {
     //this.validateType(value, type);
     console.log(type, value, token, decrypt);
     switch (type) {
       case 'STRING':
         value = value as string;
         const strObj = new StringData(value, token);
-        const strCrypt = decrypt ? await strObj.decrypt(value) : await strObj.crypt();
+        const strCrypt = decrypt ? strObj.decrypt() : strObj.crypt();
 
         return strCrypt;
 

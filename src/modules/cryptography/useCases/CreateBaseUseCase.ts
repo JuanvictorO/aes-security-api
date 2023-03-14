@@ -1,6 +1,6 @@
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
-import { BaseDto } from '../dto/BaseDto';
+import { BaseDto } from '../entities/dto/BaseDto';
 import { Base } from '../infra/typeorm/entities/Base';
 import { BaseRepositoryInterface } from '../repositories/BaseRepositoryInterface';
 
@@ -13,7 +13,7 @@ export class CreateBaseUseCase {
 
   public async execute({ client_id, name }: BaseDto): Promise<Base> {
     const baseAlreadyExists = await this.baseRepository.findOne({ name });
-    if(baseAlreadyExists) {
+    if (baseAlreadyExists) {
       throw new AppError('This base name already exists');
     }
 

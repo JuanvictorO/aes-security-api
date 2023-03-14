@@ -1,5 +1,4 @@
-import { IData } from '../../interfaces/DataInterface';
-//import aes from 'js-crypto-aes';
+import { IData } from './DataInterface';
 import { AES, enc, mode, pad } from 'crypto-js';
 import { convertHexToString } from '@shared/utils/criptografia';
 export class StringData implements IData {
@@ -10,12 +9,12 @@ export class StringData implements IData {
     this.token = chaveKey;
   }
 
-  base64ToArrayBuffer(base64: string){
+  base64ToArrayBuffer(base64: string) {
     var binary_string = Buffer.from(base64, 'base64').toString('binary');
     var len = binary_string.length;
     var bytes = new Uint8Array(len);
     for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
+      bytes[i] = binary_string.charCodeAt(i);
     }
     return bytes.buffer;
   }
@@ -26,7 +25,7 @@ export class StringData implements IData {
     const iv = enc.Hex.parse(div[1]);
 
     const aesEncrypt = AES.encrypt(this.value, key, {
-      keySize: 128/8,
+      keySize: 128 / 8,
       iv: iv,
       mode: mode.CBC,
     });
@@ -41,7 +40,7 @@ export class StringData implements IData {
     const iv = enc.Hex.parse(div[1]);
 
     const aesDecryptHex = AES.decrypt(this.value, key, {
-      keySize: 128/8,
+      keySize: 128 / 8,
       iv: iv,
       mode: mode.CBC,
     });

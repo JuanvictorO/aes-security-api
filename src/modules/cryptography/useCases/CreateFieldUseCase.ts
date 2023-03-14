@@ -1,8 +1,7 @@
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
-import { FieldDto } from '../dto/FieldDto';
+import { FieldDto } from '../entities/dto/FieldDto';
 import { Field } from '../infra/typeorm/entities/Field';
-import { FieldType } from '../infra/typeorm/entities/FieldType';
 import { FieldRepositoryInterface } from '../repositories/FieldRepositoryInterface';
 import { FieldTypeRepositoryInterface } from '../repositories/FieldTypeRepositoryInterface';
 import { TableRepositoryInterface } from '../repositories/TableRepositoryInterface';
@@ -25,7 +24,7 @@ export class CreateFieldUseCase {
     }
 
     const uppercaseFieldTypeName = field_type_name.toUpperCase();
-    const fieldType = await this.fieldTypeRepository.findOne({type_name: uppercaseFieldTypeName});
+    const fieldType = await this.fieldTypeRepository.findOne({ type_name: uppercaseFieldTypeName });
     if (!fieldType) {
       throw new AppError('FieldType not found');
     }

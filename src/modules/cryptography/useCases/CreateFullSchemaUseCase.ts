@@ -1,7 +1,7 @@
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
-import { FullSchemaDto } from '../dto/FullSchemaDto';
+import { FullSchemaDto } from '../entities/dto/FullSchemaDto';
 import { ClientRepositoryInterface } from '../repositories/ClientRepositoryInterface';
 import { CreateBaseUseCase } from './CreateBaseUseCase';
 import { CreateFieldUseCase } from './CreateFieldUseCase';

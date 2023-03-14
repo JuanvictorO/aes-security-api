@@ -1,7 +1,6 @@
 import { AppError } from '@shared/errors/AppError';
 import { verificaData } from '@shared/utils/verificaData';
 import { inject, injectable } from 'tsyringe';
-import { Column } from '../dto/FullSchemaDto';
 import { DateData } from '../entities/DateData';
 import { IntegerData } from '../entities/IntegerData';
 import { StringData } from '../entities/StringData';
@@ -51,18 +50,13 @@ export class EncryptDataUseCase {
     const columns = table.fields;
     let result: any = [];
     for (const obj of data) {
-      let tempObj = {}
+      let tempObj = {};
       const propertyNames = Object.keys(obj);
 
-      for(const ele of propertyNames) {
+      for (const ele of propertyNames) {
         const findColumn = columns.find(column => column.name === ele);
         if (findColumn) {
-          const codedColumn = this.encryptData(
-            findColumn.fieldType.type_name,
-            obj[ele],
-            findColumn.token,
-            isDecrypt,
-          );
+          const codedColumn = this.encryptData(findColumn.fieldType.type_name, obj[ele], findColumn.token, isDecrypt);
 
           tempObj = {
             ...tempObj,
@@ -95,7 +89,7 @@ export class EncryptDataUseCase {
 
   private encryptData(type: string, value: any, token: string, decrypt?: boolean): any {
     //this.validateType(value, type);
-    console.log(type, value, token, decrypt);
+
     switch (type) {
       case 'STRING':
         value = value as string;

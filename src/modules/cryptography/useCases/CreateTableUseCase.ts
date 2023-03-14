@@ -1,9 +1,8 @@
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
-import { TableDto } from '../dto/TableDto';
+import { TableDto } from '../entities/dto/TableDto';
 import { Table } from '../infra/typeorm/entities/Table';
 import { BaseRepository } from '../infra/typeorm/repositories/BaseRepository';
-import { FieldTypeRepository } from '../infra/typeorm/repositories/FieldTypeRepository';
 import { TableRepositoryInterface } from '../repositories/TableRepositoryInterface';
 
 @injectable()
@@ -17,12 +16,12 @@ export class CreateTableUseCase {
 
   public async execute({ base_id, table_name }: TableDto): Promise<Table> {
     const baseAlreadyExists = await this.baseRepository.findOne(base_id);
-    if(!baseAlreadyExists) {
+    if (!baseAlreadyExists) {
       throw new AppError('Base not found');
     }
 
     const tableAlreadyExists = await this.tableRepository.findOne({ base_id, table_name });
-    if(tableAlreadyExists) {
+    if (tableAlreadyExists) {
       throw new AppError('This table name already exists');
     }
 

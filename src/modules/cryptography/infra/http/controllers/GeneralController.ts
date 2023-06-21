@@ -6,8 +6,7 @@ import { container } from 'tsyringe';
 
 export class GeneralController {
   public async createSchema(req: Request, res: Response): Promise<Response> {
-    //TO DO: implementar autenticação por token
-    const client_id = '37c52ac7-e4b9-48f7-ab77-49f98416b0b8';
+    const client_id = req.user.id;
     const { seed, encrypt_key, database_name, tables } = req.body;
     const aesDataUseCase = container.resolve(CreateFullSchemaUseCase);
 
@@ -19,8 +18,7 @@ export class GeneralController {
   }
 
   public async encrypt(req: Request, res: Response): Promise<Response> {
-    //TO DO: implementar autenticação por token
-    const client_id = '37c52ac7-e4b9-48f7-ab77-49f98416b0b8';
+    const client_id = req.user.id;
     const { table_name, data } = req.body;
     const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 
@@ -29,8 +27,7 @@ export class GeneralController {
   }
 
   public async decrypt(req: Request, res: Response): Promise<Response> {
-    //TO DO: implementar autenticação por token
-    const client_id = '37c52ac7-e4b9-48f7-ab77-49f98416b0b8';
+    const client_id = req.user.id;
     const { table_name, data } = req.body;
     const encryptDataUseCase = container.resolve(EncryptDataUseCase);
 

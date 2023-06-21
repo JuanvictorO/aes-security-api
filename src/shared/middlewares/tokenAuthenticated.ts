@@ -2,7 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../../shared/errors/AppError';
 
 import { container } from 'tsyringe';
-import { ShowClienteUseCase } from '../../modules/cryptography/useCases/ShowClienteUseCase';
+import { ShowClientUseCase } from '@modules/cryptography/useCases/ShowClienteUseCase';
+import { authConfig } from '@config/auth';
+import { verify } from 'jsonwebtoken';
+
+interface TokenPayLoad {
+  iat: number;
+  exp: number;
+  sub: string;
+}
 
 export const ensureAuthenticated = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
   const authHeaders = request.headers.authorization;
@@ -13,19 +21,16 @@ export const ensureAuthenticated = async (request: Request, response: Response, 
 
   const [, token] = authHeaders.split(' ');
 
-  const showClienteUseCase = container.resolve(ShowClienteUseCase);
+  const showClientUseCase = container.resolve(ShowClientUseCase);
 
-  const cliente = await showClienteUseCase.execute({ auth_token: token });
+  await showClientUseCase.execute(token);
 
   try {
-    const id = cliente.id;
-    const key_cript = cliente.key_cript;
-    const seed = cliente.seed;
+    const decoded = verify(token, authConfig.jwt.secret);
+    const { sub } = decoded as TokenPayLoad;
 
-    request.cliente = {
-      id,
-      key_cript,
-      seed,
+    request.user = {
+      id: sub
     };
 
     return next();

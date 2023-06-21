@@ -1,9 +1,7 @@
 declare namespace Express {
   export interface Request {
-    cliente: {
+    user: {
       id: string;
-      key_cript: string;
-      seed: string;
     };
   }
 }

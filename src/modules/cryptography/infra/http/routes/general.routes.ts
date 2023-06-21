@@ -1,10 +1,13 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import { GeneralController } from '../controllers/GeneralController';
+import { ensureAuthenticated } from '@shared/middlewares/tokenAuthenticated';
 
 const generalController = new GeneralController();
 
 const generalRouter = Router();
+
+generalRouter.use(ensureAuthenticated)
 
 generalRouter.post(
   '/create/schema/',

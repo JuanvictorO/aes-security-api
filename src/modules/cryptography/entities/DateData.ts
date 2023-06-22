@@ -63,7 +63,9 @@ export class DateData {
 
   crypt() {
     const dateValue = new Date(this.value);
-    return new Date(dateValue.getTime() + (parseInt(this.h2d()) % this.timestamp));
+    const oneDayInMs = 86400000;
+    
+    return new Date(dateValue.getTime() + (parseInt(this.h2d()) % this.timestamp) + oneDayInMs);
   }
 
   decrypt(dateCrypted: string) {

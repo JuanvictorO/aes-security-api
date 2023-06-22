@@ -1,9 +1,0 @@
-
-POST http://localhost:3000/api/exampleTable
-content-type: application/json
-
-{
-  "client_nome": "luckas",
-  "age": 25,
-  "date": "2022-01-15"
-}
